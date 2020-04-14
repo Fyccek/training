@@ -2,9 +2,9 @@ package training;
 
 public class CustomerService {
 
-    final Customers customer;
+    final CustomerDao customer;
 
-    public CustomerService(Customers customers) {
+    public CustomerService(CustomerDao customers) {
         this.customer = customers;
     }
 

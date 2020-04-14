@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 public class CustomerConfig {
 
     @Bean
-    public Customers customerBean() {
-        return new Customers();
+    public CustomerDao customerBean() {
+        return new CustomerDao();
     }
 
     @Bean
