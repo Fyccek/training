@@ -9,6 +9,13 @@ public class CustomerService {
     }
 
     public void saveCustomer(String id, String name) {
-        customer.saveCustomer(id, name);
+    	
+    	if (id.equals(null) || id.isEmpty()) {
+			throw new NullPointerException("id can not be null or empty");
+		}
+    	
+    	String nameWithUpperCase = name.toUpperCase();
+    	
+        customer.saveCustomer(id, nameWithUpperCase);
     }
 }
