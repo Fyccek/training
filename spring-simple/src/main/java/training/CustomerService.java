@@ -1,5 +1,8 @@
 package training;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class CustomerService {
 
     final CustomerDao customer;
