@@ -41,4 +41,8 @@ public class CustomerDao {
 	public List<Customer> getCustomers() {
 		return new ArrayList<Customer>(customers);
 	}
+	
+	 public void emptyCustomers() {
+	        customers.clear();
+	    }
 }

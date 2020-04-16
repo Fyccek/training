@@ -1,5 +1,7 @@
 package training;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -38,11 +40,11 @@ public class CustomerService {
         return customer;
     }
     
-    public Customer findEmployeeById(long id) {
+    public Customer findCustomerById(long id) {
         return customerDao.findCustomerById(id);
     }
     
-    public Customer updateEmployee(long id, String name) {
+    public Customer updateCustomer(long id, String name) {
         return customerDao.updateCustomer(id, convertName(name));
     }
     
@@ -57,5 +59,13 @@ public class CustomerService {
         else {
             return name;
         }
+    }
+    
+    public List<Customer> listCustomers() {
+        return customerDao.getCustomers();
+    }
+    
+    public void emptyCustomers() {
+    	customerDao.emptyCustomers();
     }
 }
