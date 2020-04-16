@@ -26,8 +26,8 @@ public class CustomerServiceIT {
 	@Test
 	public void testSaveEmployee() {
 		customerService.saveCustomer(id, name);	
-		List<String> names = customerDao.getCustomers();
-		assertEquals(List.of(name.toUpperCase()), names);
+		List<Customer> customers = customerDao.getCustomers();
+		assertEquals(name.toUpperCase(), customers.get(0).getName());
 		
 	}
 

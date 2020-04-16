@@ -14,6 +14,6 @@ public class TestCustomerDao {
 		CustomerDao customerDao = new CustomerDao();
 		
 		customerDao.saveCustomer("1", "Pista");
-		assertEquals(List.of("Pista"), customerDao.getCustomers());
+		assertEquals("Pista", customerDao.getCustomers().get(0).getName());
 	}
 }
