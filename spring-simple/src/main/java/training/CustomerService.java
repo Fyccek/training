@@ -2,6 +2,8 @@ package training;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class CustomerService {
+	
+    final CustomerRepository customerRepository;
 
     final CustomerDao customerDao;
     
@@ -19,12 +23,14 @@ public class CustomerService {
     private final boolean isUpperCase;
 
     public CustomerService(CustomerDao customerDao, ApplicationEventPublisher publisher,
-    		@Value("${uppercase.enabled}") boolean upperCase) {
-        this.isUpperCase = upperCase;
+    		@Value("${uppercase.enabled}") boolean upperCase, CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+		this.isUpperCase = upperCase;
 		this.publisher = publisher;
 		this.customerDao = customerDao;
     }
 
+    @Transactional
     public Customer saveCustomer(String id, String name) {
     	
     	log.info("Save employee");
@@ -33,7 +39,7 @@ public class CustomerService {
 			throw new NullPointerException("id can not be null or empty");
 		}
     	
-    	Customer customer = customerDao.saveCustomer(id, convertName(name));
+    	Customer customer = customerRepository.save(new Customer(convertName(name)));
     	        
         publisher.publishEvent(new CustomerCreateEvent(this, name));
         
@@ -41,15 +47,30 @@ public class CustomerService {
     }
     
     public Customer findCustomerById(long id) {
-        return customerDao.findCustomerById(id);
+    	return customerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
     }
     
+    @Transactional
     public Customer updateCustomer(long id, String name) {
-        return customerDao.updateCustomer(id, convertName(name));
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+        customer.setName(convertName(name));
+        return customer;
     }
     
+    @Transactional
     public void deleteCustomer(long id) {
-        customerDao.deleteCustomer(id);
+        customerRepository.deleteById(id);
+    }
+    
+    
+    public List<Customer> listCustomers() {
+        return customerRepository.findAll();
+    }
+    
+    public void emptyCustomers() {
+    	customerDao.emptyCustomers();
     }
     
     private String convertName(String name) {
@@ -59,13 +80,5 @@ public class CustomerService {
         else {
             return name;
         }
-    }
-    
-    public List<Customer> listCustomers() {
-        return customerDao.getCustomers();
-    }
-    
-    public void emptyCustomers() {
-    	customerDao.emptyCustomers();
     }
 }

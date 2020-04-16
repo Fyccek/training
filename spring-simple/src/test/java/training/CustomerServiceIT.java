@@ -8,6 +8,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,17 +23,23 @@ public class CustomerServiceIT {
     @Autowired
     private CustomerService service;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
     @BeforeEach
     void init() {
-        service.emptyCustomers();
+    	customerRepository.deleteAll();
     }
 
     @Test
     void test_saveCustomer() {
         service.saveCustomer("1", "John Doe");
         service.saveCustomer("2", "Jack Doe");
-        List<Customer> customers = service.listCustomers();
-        assertEquals(List.of("JOHN DOE", "JACK DOE"), customers.stream().map(Customer::getName).collect(Collectors.toList()));
+        List<Customer> customers = customerRepository.findAll();
+        ArrayList<String> savedCustomers = new ArrayList<String>();
+        savedCustomers.add("JOHN DOE");
+        savedCustomers.add("JACK DOE");
+        assertEquals(savedCustomers, customers.stream().map(Customer::getName).collect(Collectors.toList()));
     }
 
     @Test
