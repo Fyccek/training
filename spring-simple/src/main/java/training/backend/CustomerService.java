@@ -1,4 +1,4 @@
-package training;
+package training.backend;
 
 import java.util.List;
 

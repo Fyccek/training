@@ -1,4 +1,4 @@
-package training;
+package training.backend;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
